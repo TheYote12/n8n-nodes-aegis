@@ -6,6 +6,7 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
+import FormData from 'form-data';
 
 export class AegisAi implements INodeType {
 	description: INodeTypeDescription = {
@@ -19,6 +20,9 @@ export class AegisAi implements INodeType {
 		codex: {
 			categories: ['AI'],
 			subcategories: { AI: ['Language Models'] },
+			resources: {
+				primaryDocumentation: [{ url: 'https://github.com/TheYote12/n8n-nodes-aegis' }],
+			},
 		},
 		inputs: ['main'],
 		outputs: ['main'],
@@ -485,6 +489,7 @@ export class AegisAi implements INodeType {
 		const apiKey = credentials.apiKey as string;
 
 		for (let i = 0; i < items.length; i++) {
+			try {
 			const operation = this.getNodeParameter('operation', i) as string;
 
 			if (operation === 'chatCompletion') {
@@ -523,8 +528,8 @@ export class AegisAi implements INodeType {
 					choices?: Array<{ message?: { content?: string; role?: string } }>;
 					model?: string;
 					usage?: { prompt_tokens?: number; completion_tokens?: number; total_tokens?: number };
+					aegis?: { request_id?: string; cost_usd?: number; model?: string; provider?: string; latency_ms?: number; tokens?: { prompt?: number; completion?: number; total?: number } };
 				};
-				const headers = response.headers as Record<string, string>;
 
 				returnData.push({
 					json: {
@@ -532,9 +537,12 @@ export class AegisAi implements INodeType {
 						role: responseBody.choices?.[0]?.message?.role ?? 'assistant',
 						model: responseBody.model ?? model,
 						usage: responseBody.usage ?? {},
-						requestId: headers['x-aegis-request-id'] ?? '',
-						cost: headers['x-aegis-cost'] ?? '',
-						effectiveModel: headers['x-aegis-model'] ?? '',
+						requestId: responseBody.aegis?.request_id ?? '',
+						cost: String(responseBody.aegis?.cost_usd ?? ''),
+						effectiveModel: responseBody.aegis?.model ?? '',
+						provider: responseBody.aegis?.provider ?? '',
+						latencyMs: responseBody.aegis?.latency_ms ?? null,
+						aegisTokens: responseBody.aegis?.tokens ?? {},
 					},
 				});
 			} else if (operation === 'generateImage') {
@@ -564,16 +572,18 @@ export class AegisAi implements INodeType {
 
 				const responseBody = response.body as {
 					data?: Array<{ url?: string; revised_prompt?: string }>;
+					aegis?: { request_id?: string; cost_usd?: number; model?: string; provider?: string; latency_ms?: number; tokens?: { prompt?: number; completion?: number; total?: number } };
 				};
-				const headers = response.headers as Record<string, string>;
 
 				const urls = (responseBody.data ?? []).map((img) => img.url ?? '');
 				returnData.push({
 					json: {
 						urls,
 						data: responseBody.data ?? [],
-						requestId: headers['x-aegis-request-id'] ?? '',
-						cost: headers['x-aegis-cost'] ?? '',
+						requestId: responseBody.aegis?.request_id ?? '',
+						cost: String(responseBody.aegis?.cost_usd ?? ''),
+						provider: responseBody.aegis?.provider ?? '',
+						latencyMs: responseBody.aegis?.latency_ms ?? null,
 					},
 				});
 			} else if (operation === 'createEmbedding') {
@@ -602,16 +612,19 @@ export class AegisAi implements INodeType {
 					data?: Array<{ embedding?: number[] }>;
 					model?: string;
 					usage?: { prompt_tokens?: number; total_tokens?: number };
+					aegis?: { request_id?: string; cost_usd?: number; model?: string; provider?: string; latency_ms?: number; tokens?: { prompt?: number; completion?: number; total?: number } };
 				};
-				const headers = response.headers as Record<string, string>;
 
 				returnData.push({
 					json: {
 						embedding: responseBody.data?.[0]?.embedding ?? [],
 						model: responseBody.model ?? model,
 						usage: responseBody.usage ?? {},
-						requestId: headers['x-aegis-request-id'] ?? '',
-						cost: headers['x-aegis-cost'] ?? '',
+						requestId: responseBody.aegis?.request_id ?? '',
+						cost: String(responseBody.aegis?.cost_usd ?? ''),
+						provider: responseBody.aegis?.provider ?? '',
+						latencyMs: responseBody.aegis?.latency_ms ?? null,
+						aegisTokens: responseBody.aegis?.tokens ?? {},
 					},
 				});
 			} else if (operation === 'textToSpeech') {
@@ -677,7 +690,7 @@ export class AegisAi implements INodeType {
 				const mimeType = binaryMeta?.mimeType ?? 'audio/wav';
 
 				const formBody = new FormData();
-				formBody.append('file', new Blob([new Uint8Array(binaryBuffer)], { type: mimeType }), fileName);
+				formBody.append('file', Buffer.from(binaryBuffer), { filename: fileName, contentType: mimeType });
 				formBody.append('model', model);
 				formBody.append('response_format', responseFormat);
 				if (language) formBody.append('language', language);
@@ -690,20 +703,22 @@ export class AegisAi implements INodeType {
 				const response = await this.helpers.httpRequest({
 					method: 'POST',
 					url: `${endpoint}/v1/audio/transcriptions`,
-					headers: { 'x-aegis-key': apiKey },
+					headers: { 'x-aegis-key': apiKey, ...formBody.getHeaders() },
 					body: formBody,
 					returnFullResponse: true,
 				});
 
-				const responseBody = response.body as { text?: string } | string;
-				const headers = response.headers as Record<string, string>;
+				const responseBody = response.body as { text?: string; aegis?: { request_id?: string; cost_usd?: number; model?: string; provider?: string; latency_ms?: number } } | string;
 
 				const text = typeof responseBody === 'string' ? responseBody : (responseBody.text ?? '');
+				const aegis = typeof responseBody === 'string' ? undefined : responseBody.aegis;
 				returnData.push({
 					json: {
 						text,
-						requestId: headers['x-aegis-request-id'] ?? '',
-						cost: headers['x-aegis-cost'] ?? '',
+						requestId: aegis?.request_id ?? '',
+						cost: String(aegis?.cost_usd ?? ''),
+						provider: aegis?.provider ?? '',
+						latencyMs: aegis?.latency_ms ?? null,
 					},
 				});
 			} else if (operation === 'nativeAnthropic') {
@@ -741,8 +756,8 @@ export class AegisAi implements INodeType {
 					model?: string;
 					usage?: { input_tokens?: number; output_tokens?: number };
 					stop_reason?: string;
+					aegis?: { request_id?: string; cost_usd?: number; model?: string; provider?: string; latency_ms?: number; tokens?: { prompt?: number; completion?: number; total?: number } };
 				};
-				const headers = response.headers as Record<string, string>;
 
 				returnData.push({
 					json: {
@@ -750,8 +765,11 @@ export class AegisAi implements INodeType {
 						model: responseBody.model ?? model,
 						usage: responseBody.usage ?? {},
 						stopReason: responseBody.stop_reason ?? '',
-						requestId: headers['x-aegis-request-id'] ?? '',
-						cost: headers['x-aegis-cost'] ?? '',
+						requestId: responseBody.aegis?.request_id ?? '',
+						cost: String(responseBody.aegis?.cost_usd ?? ''),
+						provider: responseBody.aegis?.provider ?? '',
+						latencyMs: responseBody.aegis?.latency_ms ?? null,
+						aegisTokens: responseBody.aegis?.tokens ?? {},
 					},
 				});
 			} else if (operation === 'nativeGemini') {
@@ -792,15 +810,18 @@ export class AegisAi implements INodeType {
 						content?: { parts?: Array<{ text?: string }> };
 					}>;
 					usageMetadata?: Record<string, unknown>;
+					aegis?: { request_id?: string; cost_usd?: number; model?: string; provider?: string; latency_ms?: number; tokens?: { prompt?: number; completion?: number; total?: number } };
 				};
-				const headers = response.headers as Record<string, string>;
 
 				returnData.push({
 					json: {
 						content: responseBody.candidates?.[0]?.content?.parts?.[0]?.text ?? '',
 						usageMetadata: responseBody.usageMetadata ?? {},
-						requestId: headers['x-aegis-request-id'] ?? '',
-						cost: headers['x-aegis-cost'] ?? '',
+						requestId: responseBody.aegis?.request_id ?? '',
+						cost: String(responseBody.aegis?.cost_usd ?? ''),
+						provider: responseBody.aegis?.provider ?? '',
+						latencyMs: responseBody.aegis?.latency_ms ?? null,
+						aegisTokens: responseBody.aegis?.tokens ?? {},
 					},
 				});
 			} else if (operation === 'listModels') {
@@ -820,6 +841,15 @@ export class AegisAi implements INodeType {
 						models: responseBody.data ?? [],
 					},
 				});
+			}
+			} catch (error) {
+				if (this.continueOnFail()) {
+					returnData.push({
+						json: { error: (error as Error).message },
+					});
+					continue;
+				}
+				throw error;
 			}
 		}
 

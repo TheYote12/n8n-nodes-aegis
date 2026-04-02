@@ -20,6 +20,9 @@ export class AegisEmbeddings implements INodeType {
 		codex: {
 			categories: ['AI'],
 			subcategories: { AI: ['Embeddings'] },
+			resources: {
+				primaryDocumentation: [{ url: 'https://github.com/TheYote12/n8n-nodes-aegis' }],
+			},
 		},
 		inputs: [],
 		outputs: ['ai_embedding'],
@@ -71,13 +74,13 @@ export class AegisEmbeddings implements INodeType {
 		},
 	};
 
-	async supplyData(this: ISupplyDataFunctions): Promise<SupplyData> {
+	async supplyData(this: ISupplyDataFunctions, itemIndex: number): Promise<SupplyData> {
 		const credentials = await this.getCredentials('aegisApi');
-		const model = this.getNodeParameter('model', 0) as string;
-		const dimensions = this.getNodeParameter('dimensions', 0) as number;
+		const model = this.getNodeParameter('model', itemIndex) as string;
+		const dimensions = this.getNodeParameter('dimensions', itemIndex) as number;
 
 		const embeddings = new OpenAIEmbeddings({
-			modelName: model,
+			model,
 			...(dimensions > 0 ? { dimensions } : {}),
 			configuration: {
 				baseURL: `${credentials.endpoint as string}/v1`,

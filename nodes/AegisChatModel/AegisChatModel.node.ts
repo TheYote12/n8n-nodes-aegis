@@ -20,6 +20,9 @@ export class AegisChatModel implements INodeType {
 		codex: {
 			categories: ['AI'],
 			subcategories: { AI: ['Language Models', 'Chat Models'] },
+			resources: {
+				primaryDocumentation: [{ url: 'https://github.com/TheYote12/n8n-nodes-aegis' }],
+			},
 		},
 		inputs: [],
 		outputs: ['ai_languageModel'],
@@ -115,15 +118,15 @@ export class AegisChatModel implements INodeType {
 		},
 	};
 
-	async supplyData(this: ISupplyDataFunctions): Promise<SupplyData> {
+	async supplyData(this: ISupplyDataFunctions, itemIndex: number): Promise<SupplyData> {
 		const credentials = await this.getCredentials('aegisApi');
-		const model = this.getNodeParameter('model', 0) as string;
-		const temperature = this.getNodeParameter('temperature', 0) as number;
-		const maxTokens = this.getNodeParameter('maxTokens', 0) as number;
-		const streaming = this.getNodeParameter('streaming', 0, true) as boolean;
-		const project = this.getNodeParameter('project', 0, '') as string;
-		const workflowTag = this.getNodeParameter('workflowTag', 0, '') as string;
-		const providerOverride = this.getNodeParameter('providerOverride', 0, 'auto') as string;
+		const model = this.getNodeParameter('model', itemIndex) as string;
+		const temperature = this.getNodeParameter('temperature', itemIndex) as number;
+		const maxTokens = this.getNodeParameter('maxTokens', itemIndex) as number;
+		const streaming = this.getNodeParameter('streaming', itemIndex, true) as boolean;
+		const project = this.getNodeParameter('project', itemIndex, '') as string;
+		const workflowTag = this.getNodeParameter('workflowTag', itemIndex, '') as string;
+		const providerOverride = this.getNodeParameter('providerOverride', itemIndex, 'auto') as string;
 
 		const metadata: Record<string, string> = { source: 'n8n-nodes-aegis' };
 		if (workflowTag) metadata.workflow_tag = workflowTag;
@@ -131,7 +134,7 @@ export class AegisChatModel implements INodeType {
 		if (providerOverride && providerOverride !== 'auto') metadata.provider = providerOverride;
 
 		const chatModel = new ChatOpenAI({
-			modelName: model,
+			model,
 			temperature,
 			streaming,
 			...(maxTokens > 0 ? { maxTokens } : {}),

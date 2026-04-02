@@ -3,7 +3,16 @@
 	"version": "0.1.0",
 	"description": "n8n community node for Aegis AI — unified LLM proxy with cost tracking, multi-provider routing, and project management",
 	"keywords": [
-		"n8n-community-node-package"
+		"n8n-community-node-package",
+		"n8n",
+		"ai",
+		"llm",
+		"openai",
+		"anthropic",
+		"google",
+		"aegis",
+		"ai-gateway",
+		"proxy"
 	],
 	"license": "MIT",
 	"homepage": "https://github.com/TheYote12/n8n-nodes-aegis",
@@ -13,7 +22,8 @@
 	},
 	"main": "dist/nodes/AegisAi/AegisAi.node.js",
 	"scripts": {
-		"build": "tsc",
+		"build": "npx tsc",
+		"postbuild": "cp -r icons dist/icons",
 		"prepublishOnly": "npm run build",
 		"test": "jest"
 	},
@@ -38,11 +48,18 @@
 			"dist/credentials/AegisApi.credentials.js"
 		]
 	},
+	"engines": {
+		"node": ">=18.0.0"
+	},
 	"dependencies": {
-		"@langchain/openai": "^0.5.13"
+		"@langchain/openai": "^0.5.13",
+		"form-data": "^4.0.2"
 	},
 	"peerDependencies": {
-		"n8n-workflow": "*"
+		"n8n-workflow": ">=1.0.0"
+	},
+	"overrides": {
+		"langsmith": "^0.5.16"
 	},
 	"devDependencies": {
 		"@types/jest": "^30.0.0",
