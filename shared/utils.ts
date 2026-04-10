@@ -13,16 +13,18 @@ type MetadataContext = IExecuteFunctions | ISupplyDataFunctions;
  * - `source` is always set.
  * - `workflow_tag` comes from the manual field, falling back to the workflow name.
  * - `project` is included when non-empty.
- * - `providerOverride` is included only when explicitly set (not 'auto').
+ * - `provider` is only included when `options.includeProvider` is `true` — callers
+ *   must opt in explicitly. Only pass `includeProvider: true` when the node actually
+ *   exposes a `providerOverride` field; otherwise n8n may return a stale stored value
+ *   from a previous execution that had the field visible.
  *
- * The try/catch around providerOverride is intentional — it is the ONLY
- * parameter wrapped this way because not every operation exposes it.
  * `project` and `workflowTag` must exist on every calling node; a missing
  * parameter there is a real bug, not something to swallow.
  */
 export function buildMetadata(
 	context: MetadataContext,
 	itemIndex: number,
+	options?: { includeProvider?: boolean },
 ): Record<string, string> {
 	const workflowTag = context.getNodeParameter('workflowTag', itemIndex, '') as string;
 	const effectiveTag = workflowTag || context.getWorkflow().name || '';
@@ -32,11 +34,9 @@ export function buildMetadata(
 	if (effectiveTag) metadata.workflow_tag = effectiveTag;
 	if (project) metadata.project = project;
 
-	try {
+	if (options?.includeProvider) {
 		const providerOverride = context.getNodeParameter('providerOverride', itemIndex, 'auto') as string;
 		if (providerOverride && providerOverride !== 'auto') metadata.provider = providerOverride;
-	} catch {
-		// providerOverride is not available on every operation — safe to ignore
 	}
 
 	return metadata;

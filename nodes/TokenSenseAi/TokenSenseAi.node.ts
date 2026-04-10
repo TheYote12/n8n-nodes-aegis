@@ -485,7 +485,7 @@ export class TokenSenseAi implements INodeType {
 				if (systemPrompt) messages.push({ role: 'system', content: systemPrompt });
 				messages.push({ role: 'user', content: userMessage });
 
-				const metadata = buildMetadata(this, i);
+				const metadata = buildMetadata(this, i, { includeProvider: true });
 
 				const body: Record<string, unknown> = { model, messages, temperature, metadata };
 				if (maxTokens > 0) body.max_tokens = maxTokens;
@@ -527,7 +527,7 @@ export class TokenSenseAi implements INodeType {
 				const quality = this.getNodeParameter('imageQuality', i) as string;
 				const n = this.getNodeParameter('imageCount', i) as number;
 
-				const metadata = buildMetadata(this, i);
+				const metadata = buildMetadata(this, i, { includeProvider: true });
 
 				const body: Record<string, unknown> = { prompt, model, size, quality, n, metadata };
 

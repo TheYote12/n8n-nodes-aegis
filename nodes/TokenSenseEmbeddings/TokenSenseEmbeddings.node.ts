@@ -96,7 +96,7 @@ export class TokenSenseEmbeddings implements INodeType {
 		const model = this.getNodeParameter('model', itemIndex) as string;
 		const dimensions = this.getNodeParameter('dimensions', itemIndex) as number;
 
-		const metadata = buildMetadata(this, itemIndex);
+		const metadata = buildMetadata(this, itemIndex, { includeProvider: true });
 
 		const nativeFetch = globalThis.fetch;
 		const metadataInjectingFetch: typeof globalThis.fetch = async (url, init) => {

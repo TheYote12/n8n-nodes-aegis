@@ -106,7 +106,7 @@ export class TokenSenseChatModel implements INodeType {
 		const maxTokens = this.getNodeParameter('maxTokens', itemIndex) as number;
 		const streaming = this.getNodeParameter('streaming', itemIndex, true) as boolean;
 
-		const metadata = buildMetadata(this, itemIndex);
+		const metadata = buildMetadata(this, itemIndex, { includeProvider: true });
 
 		const chatModel = new ChatOpenAI({
 			model,
