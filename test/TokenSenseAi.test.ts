@@ -71,6 +71,11 @@ describe('TokenSenseAi node', () => {
 		expect(propsWithDisplayOptions.length).toBeGreaterThan(0);
 	});
 
+	it('workflowTag description mentions auto-detection', () => {
+		const prop = node.description.properties.find((p) => p.name === 'workflowTag');
+		expect(prop?.description).toMatch(/auto/i);
+	});
+
 	it('has execute method', () => {
 		expect(typeof node.execute).toBe('function');
 	});
