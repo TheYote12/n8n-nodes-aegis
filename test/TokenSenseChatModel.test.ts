@@ -1,10 +1,10 @@
-import { AegisChatModel } from '../nodes/AegisChatModel/AegisChatModel.node';
+import { TokenSenseChatModel } from '../nodes/TokenSenseChatModel/TokenSenseChatModel.node';
 
-describe('AegisChatModel node', () => {
-	let node: AegisChatModel;
+describe('TokenSenseChatModel node', () => {
+	let node: TokenSenseChatModel;
 
 	beforeEach(() => {
-		node = new AegisChatModel();
+		node = new TokenSenseChatModel();
 	});
 
 	it('has displayName "TokenSense Chat Model"', () => {

@@ -1,10 +1,10 @@
-import { AegisEmbeddings } from '../nodes/AegisEmbeddings/AegisEmbeddings.node';
+import { TokenSenseEmbeddings } from '../nodes/TokenSenseEmbeddings/TokenSenseEmbeddings.node';
 
-describe('AegisEmbeddings node', () => {
-	let node: AegisEmbeddings;
+describe('TokenSenseEmbeddings node', () => {
+	let node: TokenSenseEmbeddings;
 
 	beforeEach(() => {
-		node = new AegisEmbeddings();
+		node = new TokenSenseEmbeddings();
 	});
 
 	it('has displayName "TokenSense Embeddings"', () => {

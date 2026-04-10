@@ -8,7 +8,7 @@ import type {
 } from 'n8n-workflow';
 import { ChatOpenAI } from '@langchain/openai';
 
-export class AegisChatModel implements INodeType {
+export class TokenSenseChatModel implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'TokenSense Chat Model',
 		name: 'tokenSenseChatModel',
@@ -149,4 +149,4 @@ export class AegisChatModel implements INodeType {
 	}
 }
 
-export default AegisChatModel;
+export default TokenSenseChatModel;

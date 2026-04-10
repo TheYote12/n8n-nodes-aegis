@@ -1,6 +1,6 @@
 import type { ICredentialType, INodeProperties } from 'n8n-workflow';
 
-export class AegisApi implements ICredentialType {
+export class TokenSenseApi implements ICredentialType {
 	name = 'tokenSenseApi';
 	displayName = 'TokenSense API';
 	documentationUrl = 'https://github.com/TheYote12/n8n-nodes-tokensense';
@@ -30,4 +30,4 @@ export class AegisApi implements ICredentialType {
 	};
 }
 
-export default AegisApi;
+export default TokenSenseApi;
