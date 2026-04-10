@@ -803,8 +803,8 @@ export class TokenSenseAi implements INodeType {
 
 				const response = await this.helpers.httpRequest({
 					method: 'POST',
-					url: `${endpoint}/v1beta/models/${model}:generateContent?key=${apiKey}`,
-					headers: { 'Content-Type': 'application/json' },
+					url: `${endpoint}/v1beta/models/${model}:generateContent`,
+					headers: { 'Content-Type': 'application/json', 'x-tokensense-key': apiKey },
 					body,
 					returnFullResponse: true,
 				});
