@@ -8,7 +8,7 @@ import type {
 } from 'n8n-workflow';
 import FormData from 'form-data';
 
-export class AegisAi implements INodeType {
+export class TokenSenseAi implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'TokenSense AI',
 		name: 'tokenSenseAi',
@@ -524,6 +524,7 @@ export class AegisAi implements INodeType {
 					returnFullResponse: true,
 				});
 
+				// TODO: rename when proxy updates response field from 'aegis' to 'tokensense'
 				const responseBody = response.body as {
 					choices?: Array<{ message?: { content?: string; role?: string } }>;
 					model?: string;
@@ -857,4 +858,4 @@ export class AegisAi implements INodeType {
 	}
 }
 
-export default AegisAi;
+export default TokenSenseAi;

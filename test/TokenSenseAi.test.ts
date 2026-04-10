@@ -1,13 +1,13 @@
-import { AegisAi } from '../nodes/AegisAi/AegisAi.node';
+import { TokenSenseAi } from '../nodes/TokenSenseAi/TokenSenseAi.node';
 
-describe('AegisAi node', () => {
-	let node: AegisAi;
+describe('TokenSenseAi node', () => {
+	let node: TokenSenseAi;
 
 	beforeEach(() => {
-		node = new AegisAi();
+		node = new TokenSenseAi();
 	});
 
-	const getOperationValues = (n: AegisAi): string[] => {
+	const getOperationValues = (n: TokenSenseAi): string[] => {
 		const operationProp = n.description.properties.find((p) => p.name === 'operation');
 		return ((operationProp?.options as Array<{ value: string }>) ?? []).map((o) => o.value);
 	};

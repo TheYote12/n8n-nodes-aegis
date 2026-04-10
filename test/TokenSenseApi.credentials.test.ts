@@ -1,10 +1,10 @@
-import { AegisApi } from '../credentials/AegisApi.credentials';
+import { TokenSenseApi } from '../credentials/TokenSenseApi.credentials';
 
-describe('AegisApi credential', () => {
-	let cred: AegisApi;
+describe('TokenSenseApi credential', () => {
+	let cred: TokenSenseApi;
 
 	beforeEach(() => {
-		cred = new AegisApi();
+		cred = new TokenSenseApi();
 	});
 
 	it('has name "tokenSenseApi"', () => {

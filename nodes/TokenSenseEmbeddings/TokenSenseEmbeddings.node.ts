@@ -8,7 +8,7 @@ import type {
 } from 'n8n-workflow';
 import { OpenAIEmbeddings } from '@langchain/openai';
 
-export class AegisEmbeddings implements INodeType {
+export class TokenSenseEmbeddings implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'TokenSense Embeddings',
 		name: 'tokenSenseEmbeddings',
@@ -92,4 +92,4 @@ export class AegisEmbeddings implements INodeType {
 	}
 }
 
-export default AegisEmbeddings;
+export default TokenSenseEmbeddings;

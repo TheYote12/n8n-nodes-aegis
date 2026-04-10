@@ -20,7 +20,7 @@
 		"type": "git",
 		"url": "https://github.com/TheYote12/n8n-nodes-tokensense.git"
 	},
-	"main": "dist/nodes/AegisAi/AegisAi.node.js",
+	"main": "dist/nodes/TokenSenseAi/TokenSenseAi.node.js",
 	"scripts": {
 		"build": "npx tsc",
 		"postbuild": "cp -r icons dist/icons",
@@ -40,12 +40,12 @@
 	"n8n": {
 		"n8nNodesApiVersion": 1,
 		"nodes": [
-			"dist/nodes/AegisAi/AegisAi.node.js",
-			"dist/nodes/AegisChatModel/AegisChatModel.node.js",
-			"dist/nodes/AegisEmbeddings/AegisEmbeddings.node.js"
+			"dist/nodes/TokenSenseAi/TokenSenseAi.node.js",
+			"dist/nodes/TokenSenseChatModel/TokenSenseChatModel.node.js",
+			"dist/nodes/TokenSenseEmbeddings/TokenSenseEmbeddings.node.js"
 		],
 		"credentials": [
-			"dist/credentials/AegisApi.credentials.js"
+			"dist/credentials/TokenSenseApi.credentials.js"
 		]
 	},
 	"engines": {
