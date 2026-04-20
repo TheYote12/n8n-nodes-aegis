@@ -8,6 +8,25 @@ import type {
 type MetadataContext = IExecuteFunctions | ISupplyDataFunctions;
 
 /**
+ * Normalize a TokenSense endpoint to the bare origin.
+ *
+ * Strips any trailing slashes and any trailing `/v1` segment so callers can
+ * build URLs like `${normalizeBaseUrl(endpoint)}/v1/...` without doubling up.
+ * The credential-level regex blocks `/v1` at input time, but this helper is
+ * defence-in-depth for credentials saved before the regex validator shipped
+ * and for code paths that receive the raw endpoint value.
+ */
+export function normalizeBaseUrl(input: string): string {
+	let current = String(input).trim();
+	let previous = '';
+	while (current !== previous) {
+		previous = current;
+		current = current.replace(/\/+$/, '').replace(/\/v1$/, '');
+	}
+	return current;
+}
+
+/**
  * Build the metadata Record sent with every TokenSense API call.
  *
  * - `source` is always set.
@@ -65,12 +84,17 @@ export async function loadModels(
 ): Promise<INodePropertyOptions[]> {
 	try {
 		const credentials = await this.getCredentials('tokenSenseApi');
-		const response = await this.helpers.httpRequest({
-			method: 'GET',
-			url: `${credentials.endpoint as string}/v1/models`,
-			headers: { 'x-tokensense-key': credentials.apiKey as string },
-		});
-		let models = response.data as Array<{ id: string }>;
+		const baseUrl = normalizeBaseUrl(credentials.endpoint as string);
+		const response = await this.helpers.httpRequestWithAuthentication.call(
+			this,
+			'tokenSenseApi',
+			{
+				method: 'GET',
+				baseURL: baseUrl,
+				url: '/v1/models',
+			},
+		);
+		let models = (response as { data?: Array<{ id: string }> }).data ?? [];
 		if (filter) {
 			const filtered = models.filter((m) => filter(m.id));
 			if (filtered.length === 0) throw new Error('No models matched filter');
