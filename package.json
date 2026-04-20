@@ -15,12 +15,16 @@
 		"proxy"
 	],
 	"license": "MIT",
+	"author": {
+		"name": "TheYote12",
+		"email": "carlobpersonal@gmail.com",
+		"url": "https://github.com/TheYote12"
+	},
 	"homepage": "https://github.com/TheYote12/n8n-nodes-tokensense",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/TheYote12/n8n-nodes-tokensense.git"
 	},
-	"main": "dist/nodes/TokenSenseAi/TokenSenseAi.node.js",
 	"scripts": {
 		"build": "n8n-node build",
 		"dev": "n8n-node dev",
@@ -33,7 +37,6 @@
 	"files": [
 		"dist",
 		"icons",
-		"package.json",
 		"LICENSE",
 		"README.md"
 	],
@@ -51,21 +54,16 @@
 		]
 	},
 	"engines": {
-		"node": ">=18.0.0"
+		"node": ">=22.16"
 	},
-	"dependencies": {
-		"@langchain/openai": "^0.5.13",
-		"form-data": "^4.0.2"
-	},
+	"dependencies": {},
 	"peerDependencies": {
-		"n8n-workflow": ">=1.0.0"
-	},
-	"overrides": {
-		"langsmith": "^0.5.16"
+		"n8n-workflow": ">=2.13.0 <3.0.0",
+		"@n8n/ai-node-sdk": ">=0.7.0 <0.9.0"
 	},
 	"devDependencies": {
-		"@n8n/ai-node-sdk": "^0.7.0",
-		"@n8n/eslint-plugin-community-nodes": "^0.10.0",
+		"@n8n/ai-node-sdk": "0.7.0",
+		"@n8n/eslint-plugin-community-nodes": "0.10.0",
 		"@n8n/node-cli": "^0.23.1",
 		"@types/jest": "^29.5.14",
 		"@types/node": "^22.19.17",
