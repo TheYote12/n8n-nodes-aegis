@@ -74,15 +74,6 @@ The **TokenSense AI** node is a standalone node for calling TokenSense directly 
 - [GitHub](https://github.com/TheYote12/n8n-nodes-tokensense)
 - [Report issues](https://github.com/TheYote12/n8n-nodes-tokensense/issues)
 
-## Publishing (maintainer note)
-
-The publish workflow triggers automatically when you push a tag matching `v*`. Before publishing, add an `NPM_TOKEN` secret in the GitHub repository **Settings → Secrets → Actions**.
-
-```bash
-git tag v0.1.0
-git push origin v0.1.0
-```
-
 ## License
 
 MIT
