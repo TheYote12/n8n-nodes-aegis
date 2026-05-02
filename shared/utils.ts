@@ -4,6 +4,7 @@ import type {
 	INodePropertyOptions,
 	ISupplyDataFunctions,
 } from 'n8n-workflow';
+import { NodeOperationError } from 'n8n-workflow';
 
 type MetadataContext = IExecuteFunctions | ISupplyDataFunctions;
 
@@ -102,7 +103,11 @@ export async function loadModels(
 		let models = (response as { data?: Array<{ id: string }> }).data ?? [];
 		if (filter) {
 			const filtered = models.filter((m) => filter(m.id));
-			if (filtered.length === 0) throw new Error('No models matched filter');
+			if (filtered.length === 0) throw new NodeOperationError(
+				this.getNode(),
+				'No models matched filter',
+				{ description: 'Adjust the model filter expression or remove it to see all available models' },
+			);
 			models = filtered;
 		}
 		return models.map((m) => ({ name: m.id, value: m.id }));
