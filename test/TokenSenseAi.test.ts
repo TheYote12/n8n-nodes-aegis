@@ -9,8 +9,11 @@ describe('TokenSenseAi node', () => {
 	});
 
 	const getOperationValues = (n: TokenSenseAi): string[] => {
-		const operationProp = n.description.properties.find((p) => p.name === 'operation');
-		return ((operationProp?.options as Array<{ value: string }>) ?? []).map((o) => o.value);
+		const operationProps = n.description.properties.filter((p) => p.name === 'operation');
+		const values = operationProps.flatMap(
+			(p) => ((p.options as Array<{ value: string }>) ?? []).map((o) => o.value),
+		);
+		return [...new Set(values)];
 	};
 
 	it('has displayName "TokenSense AI"', () => {
@@ -59,6 +62,13 @@ describe('TokenSenseAi node', () => {
 
 	it('is usable as an AI Agent tool', () => {
 		expect(node.description.usableAsTool).toBe(true);
+	});
+
+	it('defines 5 resources', () => {
+		const resourceProp = node.description.properties.find((p) => p.name === 'resource');
+		const values = ((resourceProp?.options as Array<{ value: string }>) ?? []).map((o) => o.value);
+		expect(values).toEqual(expect.arrayContaining(['chat', 'image', 'embedding', 'audio', 'models']));
+		expect(values).toHaveLength(5);
 	});
 
 	it('chatCompletion model property has displayOptions configured', () => {
