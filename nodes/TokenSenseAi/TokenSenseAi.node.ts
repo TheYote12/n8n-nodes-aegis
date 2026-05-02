@@ -30,22 +30,79 @@ export class TokenSenseAi implements INodeType {
 		outputs: ['main'],
 		credentials: [{ name: 'tokenSenseApi', required: true }],
 		properties: [
-			// ── Operation selector ──
+			// ── Resource selector ──
+			{
+				displayName: 'Resource',
+				name: 'resource',
+				type: 'options',
+				noDataExpression: true,
+				default: 'chat',
+				options: [
+					{ name: 'Audio', value: 'audio', description: 'Text to speech and audio transcription' },
+					{ name: 'Chat', value: 'chat', description: 'Chat completions and native provider APIs' },
+					{ name: 'Embedding', value: 'embedding', description: 'Create text embeddings' },
+					{ name: 'Image', value: 'image', description: 'Generate images from text' },
+					{ name: 'Model', value: 'models', description: 'List available models' },
+				],
+			},
+
+			// ── Operation selectors (one per resource) ──
 			{
 				displayName: 'Operation',
 				name: 'operation',
 				type: 'options',
 				noDataExpression: true,
 				default: 'chatCompletion',
+				displayOptions: { show: { resource: ['chat'] } },
 				options: [
-					{ name: 'Chat Completion', value: 'chatCompletion' },
-					{ name: 'Create Embedding', value: 'createEmbedding' },
-					{ name: 'Generate Image', value: 'generateImage' },
-					{ name: 'List Models', value: 'listModels' },
-					{ name: 'Native Anthropic', value: 'nativeAnthropic' },
-					{ name: 'Native Gemini', value: 'nativeGemini' },
-					{ name: 'Text to Speech', value: 'textToSpeech' },
-					{ name: 'Transcribe Audio', value: 'transcribeAudio' },
+					{ name: 'Chat Completion', value: 'chatCompletion', description: 'Send a chat completion request via the unified API', action: 'Send a chat completion request' },
+					{ name: 'Native Anthropic', value: 'nativeAnthropic', description: 'Send a native Anthropic Messages API request', action: 'Send a native anthropic request' },
+					{ name: 'Native Gemini', value: 'nativeGemini', description: 'Send a native Gemini API request', action: 'Send a native gemini request' },
+				],
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: 'generateImage',
+				displayOptions: { show: { resource: ['image'] } },
+				options: [
+					{ name: 'Generate Image', value: 'generateImage', description: 'Generate an image from a text prompt', action: 'Generate an image from text' },
+				],
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: 'createEmbedding',
+				displayOptions: { show: { resource: ['embedding'] } },
+				options: [
+					{ name: 'Create Embedding', value: 'createEmbedding', description: 'Create a vector embedding from text', action: 'Create a text embedding' },
+				],
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: 'textToSpeech',
+				displayOptions: { show: { resource: ['audio'] } },
+				options: [
+					{ name: 'Text to Speech', value: 'textToSpeech', description: 'Convert text to speech audio', action: 'Convert text to speech' },
+					{ name: 'Transcribe Audio', value: 'transcribeAudio', description: 'Transcribe audio to text', action: 'Transcribe audio to text' },
+				],
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				default: 'listModels',
+				displayOptions: { show: { resource: ['models'] } },
+				options: [
+					{ name: 'List Models', value: 'listModels', description: 'List all available models', action: 'List all available models' },
 				],
 			},
 
@@ -59,7 +116,7 @@ export class TokenSenseAi implements INodeType {
 				description:
 					'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 				typeOptions: { loadOptionsMethod: 'getModels' },
-				displayOptions: { show: { operation: ['chatCompletion'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['chatCompletion'] } },
 			},
 			{
 				displayName: 'System Prompt',
@@ -68,7 +125,7 @@ export class TokenSenseAi implements INodeType {
 				default: '',
 				typeOptions: { rows: 4 },
 				description: 'Optional system message to set the behavior of the model',
-				displayOptions: { show: { operation: ['chatCompletion'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['chatCompletion'] } },
 			},
 			{
 				displayName: 'User Message',
@@ -78,7 +135,7 @@ export class TokenSenseAi implements INodeType {
 				required: true,
 				typeOptions: { rows: 4 },
 				description: 'The message to send to the model',
-				displayOptions: { show: { operation: ['chatCompletion'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['chatCompletion'] } },
 			},
 			{
 				displayName: 'Temperature',
@@ -87,7 +144,7 @@ export class TokenSenseAi implements INodeType {
 				default: 0.7,
 				typeOptions: { minValue: 0, maxValue: 2, numberPrecision: 1 },
 				description: 'Controls randomness in the output',
-				displayOptions: { show: { operation: ['chatCompletion'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['chatCompletion'] } },
 			},
 			{
 				displayName: 'Max Tokens',
@@ -95,7 +152,7 @@ export class TokenSenseAi implements INodeType {
 				type: 'number',
 				default: 0,
 				description: 'Maximum number of tokens to generate. Leave at 0 for model default.',
-				displayOptions: { show: { operation: ['chatCompletion'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['chatCompletion'] } },
 			},
 			{
 				displayName: 'JSON Mode',
@@ -103,7 +160,7 @@ export class TokenSenseAi implements INodeType {
 				type: 'boolean',
 				default: false,
 				description: 'Whether to force the model to respond with valid JSON',
-				displayOptions: { show: { operation: ['chatCompletion'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['chatCompletion'] } },
 			},
 			{
 				displayName: 'Project',
@@ -113,15 +170,7 @@ export class TokenSenseAi implements INodeType {
 				description: 'TokenSense project name for cost tracking and analytics',
 				displayOptions: {
 					show: {
-						operation: [
-							'chatCompletion',
-							'generateImage',
-							'createEmbedding',
-							'textToSpeech',
-							'transcribeAudio',
-							'nativeAnthropic',
-							'nativeGemini',
-						],
+						resource: ['chat', 'image', 'embedding', 'audio'],
 					},
 				},
 			},
@@ -133,15 +182,7 @@ export class TokenSenseAi implements INodeType {
 				description: 'Tag to identify this workflow in TokenSense Dashboard. Auto-detected from workflow name if left empty.',
 				displayOptions: {
 					show: {
-						operation: [
-							'chatCompletion',
-							'generateImage',
-							'createEmbedding',
-							'textToSpeech',
-							'transcribeAudio',
-							'nativeAnthropic',
-							'nativeGemini',
-						],
+						resource: ['chat', 'image', 'embedding', 'audio'],
 					},
 				},
 			},
@@ -159,7 +200,7 @@ export class TokenSenseAi implements INodeType {
 					{ name: 'OpenAI', value: 'openai' },
 					{ name: 'xAI', value: 'xai' },
 				],
-				displayOptions: { show: { operation: ['chatCompletion', 'generateImage'] } },
+				displayOptions: { show: { resource: ['chat', 'image'], operation: ['chatCompletion', 'generateImage'] } },
 			},
 
 			// ── Generate Image parameters ──
@@ -171,7 +212,7 @@ export class TokenSenseAi implements INodeType {
 				required: true,
 				typeOptions: { rows: 4 },
 				description: 'Text description of the image to generate',
-				displayOptions: { show: { operation: ['generateImage'] } },
+				displayOptions: { show: { resource: ['image'], operation: ['generateImage'] } },
 			},
 			{
 				displayName: 'Model',
@@ -191,7 +232,7 @@ export class TokenSenseAi implements INodeType {
 					{ name: 'Imagen 4 Fast', value: 'imagen-4-fast' },
 					{ name: 'Imagen 4 Ultra', value: 'imagen-4-ultra' },
 				],
-				displayOptions: { show: { operation: ['generateImage'] } },
+				displayOptions: { show: { resource: ['image'], operation: ['generateImage'] } },
 			},
 			{
 				displayName: 'Size',
@@ -203,7 +244,7 @@ export class TokenSenseAi implements INodeType {
 					{ name: '1792x1024', value: '1792x1024' },
 					{ name: '1024x1792', value: '1024x1792' },
 				],
-				displayOptions: { show: { operation: ['generateImage'] } },
+				displayOptions: { show: { resource: ['image'], operation: ['generateImage'] } },
 			},
 			{
 				displayName: 'Quality',
@@ -214,7 +255,7 @@ export class TokenSenseAi implements INodeType {
 					{ name: 'HD', value: 'hd' },
 					{ name: 'Standard', value: 'standard' },
 				],
-				displayOptions: { show: { operation: ['generateImage'] } },
+				displayOptions: { show: { resource: ['image'], operation: ['generateImage'] } },
 			},
 			{
 				displayName: 'Number of Images',
@@ -222,7 +263,7 @@ export class TokenSenseAi implements INodeType {
 				type: 'number',
 				default: 1,
 				typeOptions: { minValue: 1, maxValue: 10 },
-				displayOptions: { show: { operation: ['generateImage'] } },
+				displayOptions: { show: { resource: ['image'], operation: ['generateImage'] } },
 			},
 
 			// ── Create Embedding parameters ──
@@ -233,7 +274,7 @@ export class TokenSenseAi implements INodeType {
 				default: '',
 				required: true,
 				description: 'Text to embed',
-				displayOptions: { show: { operation: ['createEmbedding'] } },
+				displayOptions: { show: { resource: ['embedding'], operation: ['createEmbedding'] } },
 			},
 			{
 				displayName: 'Model',
@@ -245,7 +286,7 @@ export class TokenSenseAi implements INodeType {
 					{ name: 'Text Embedding 3 Small', value: 'text-embedding-3-small' },
 					{ name: 'Text Embedding Ada 002', value: 'text-embedding-ada-002' },
 				],
-				displayOptions: { show: { operation: ['createEmbedding'] } },
+				displayOptions: { show: { resource: ['embedding'], operation: ['createEmbedding'] } },
 			},
 			{
 				displayName: 'Dimensions',
@@ -253,7 +294,7 @@ export class TokenSenseAi implements INodeType {
 				type: 'number',
 				default: 0,
 				description: 'Output dimensions (only for text-embedding-3-* models). Leave at 0 for model default.',
-				displayOptions: { show: { operation: ['createEmbedding'] } },
+				displayOptions: { show: { resource: ['embedding'], operation: ['createEmbedding'] } },
 			},
 
 			// ── Text to Speech parameters ──
@@ -265,7 +306,7 @@ export class TokenSenseAi implements INodeType {
 				required: true,
 				typeOptions: { rows: 4 },
 				description: 'Text to convert to speech',
-				displayOptions: { show: { operation: ['textToSpeech'] } },
+				displayOptions: { show: { resource: ['audio'], operation: ['textToSpeech'] } },
 			},
 			{
 				displayName: 'Model',
@@ -276,7 +317,7 @@ export class TokenSenseAi implements INodeType {
 					{ name: 'TTS-1', value: 'tts-1' },
 					{ name: 'TTS-1 HD', value: 'tts-1-hd' },
 				],
-				displayOptions: { show: { operation: ['textToSpeech'] } },
+				displayOptions: { show: { resource: ['audio'], operation: ['textToSpeech'] } },
 			},
 			{
 				displayName: 'Voice',
@@ -291,7 +332,7 @@ export class TokenSenseAi implements INodeType {
 					{ name: 'Onyx', value: 'onyx' },
 					{ name: 'Shimmer', value: 'shimmer' },
 				],
-				displayOptions: { show: { operation: ['textToSpeech'] } },
+				displayOptions: { show: { resource: ['audio'], operation: ['textToSpeech'] } },
 			},
 			{
 				displayName: 'Response Format',
@@ -306,7 +347,7 @@ export class TokenSenseAi implements INodeType {
 					{ name: 'PCM', value: 'pcm' },
 					{ name: 'WAV', value: 'wav' },
 				],
-				displayOptions: { show: { operation: ['textToSpeech'] } },
+				displayOptions: { show: { resource: ['audio'], operation: ['textToSpeech'] } },
 			},
 			{
 				displayName: 'Speed',
@@ -315,7 +356,7 @@ export class TokenSenseAi implements INodeType {
 				default: 1.0,
 				typeOptions: { minValue: 0.25, maxValue: 4.0, numberPrecision: 2 },
 				description: 'Speed of the generated audio (0.25 to 4.0)',
-				displayOptions: { show: { operation: ['textToSpeech'] } },
+				displayOptions: { show: { resource: ['audio'], operation: ['textToSpeech'] } },
 			},
 
 			// ── Transcribe Audio parameters ──
@@ -325,7 +366,7 @@ export class TokenSenseAi implements INodeType {
 				type: 'string',
 				default: 'data',
 				description: 'Name of the binary property containing the audio file',
-				displayOptions: { show: { operation: ['transcribeAudio'] } },
+				displayOptions: { show: { resource: ['audio'], operation: ['transcribeAudio'] } },
 			},
 			{
 				displayName: 'Model',
@@ -336,7 +377,7 @@ export class TokenSenseAi implements INodeType {
 					{ name: 'Whisper 1', value: 'whisper-1' },
 					{ name: 'Whisper 1 HD', value: 'whisper-1-hd' },
 				],
-				displayOptions: { show: { operation: ['transcribeAudio'] } },
+				displayOptions: { show: { resource: ['audio'], operation: ['transcribeAudio'] } },
 			},
 			{
 				displayName: 'Language',
@@ -344,7 +385,7 @@ export class TokenSenseAi implements INodeType {
 				type: 'string',
 				default: '',
 				description: 'ISO 639-1 language code (e.g. "en", "es", "fr"). Leave empty for auto-detection.',
-				displayOptions: { show: { operation: ['transcribeAudio'] } },
+				displayOptions: { show: { resource: ['audio'], operation: ['transcribeAudio'] } },
 			},
 			{
 				displayName: 'Response Format',
@@ -358,7 +399,7 @@ export class TokenSenseAi implements INodeType {
 					{ name: 'Verbose JSON', value: 'verbose_json' },
 					{ name: 'VTT', value: 'vtt' },
 				],
-				displayOptions: { show: { operation: ['transcribeAudio'] } },
+				displayOptions: { show: { resource: ['audio'], operation: ['transcribeAudio'] } },
 			},
 
 			// ── Native Anthropic parameters ──
@@ -372,7 +413,7 @@ export class TokenSenseAi implements INodeType {
 					{ name: 'Claude Opus 4', value: 'claude-opus-4-20250514' },
 					{ name: 'Claude Sonnet 4.5', value: 'claude-sonnet-4-5-20250929' },
 				],
-				displayOptions: { show: { operation: ['nativeAnthropic'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['nativeAnthropic'] } },
 			},
 			{
 				displayName: 'System Prompt',
@@ -381,7 +422,7 @@ export class TokenSenseAi implements INodeType {
 				default: '',
 				typeOptions: { rows: 4 },
 				description: 'Optional system prompt',
-				displayOptions: { show: { operation: ['nativeAnthropic'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['nativeAnthropic'] } },
 			},
 			{
 				displayName: 'User Message',
@@ -391,7 +432,7 @@ export class TokenSenseAi implements INodeType {
 				required: true,
 				typeOptions: { rows: 4 },
 				description: 'The message to send',
-				displayOptions: { show: { operation: ['nativeAnthropic'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['nativeAnthropic'] } },
 			},
 			{
 				displayName: 'Max Tokens',
@@ -400,7 +441,7 @@ export class TokenSenseAi implements INodeType {
 				default: 1024,
 				required: true,
 				description: 'Maximum number of tokens to generate (required by Anthropic)',
-				displayOptions: { show: { operation: ['nativeAnthropic'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['nativeAnthropic'] } },
 			},
 			{
 				displayName: 'Temperature',
@@ -409,7 +450,7 @@ export class TokenSenseAi implements INodeType {
 				default: 1.0,
 				typeOptions: { minValue: 0, maxValue: 1, numberPrecision: 1 },
 				description: 'Controls randomness (0-1)',
-				displayOptions: { show: { operation: ['nativeAnthropic'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['nativeAnthropic'] } },
 			},
 
 			// ── Native Gemini parameters ──
@@ -423,7 +464,7 @@ export class TokenSenseAi implements INodeType {
 					{ name: 'Gemini 2.0 Flash', value: 'gemini-2.0-flash' },
 					{ name: 'Gemini 2.0 Flash Lite', value: 'gemini-2.0-flash-lite' },
 				],
-				displayOptions: { show: { operation: ['nativeGemini'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['nativeGemini'] } },
 			},
 			{
 				displayName: 'User Message',
@@ -433,7 +474,7 @@ export class TokenSenseAi implements INodeType {
 				required: true,
 				typeOptions: { rows: 4 },
 				description: 'The message to send',
-				displayOptions: { show: { operation: ['nativeGemini'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['nativeGemini'] } },
 			},
 			{
 				displayName: 'System Instruction',
@@ -442,7 +483,7 @@ export class TokenSenseAi implements INodeType {
 				default: '',
 				typeOptions: { rows: 4 },
 				description: 'Optional system instruction',
-				displayOptions: { show: { operation: ['nativeGemini'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['nativeGemini'] } },
 			},
 			{
 				displayName: 'Temperature',
@@ -451,7 +492,7 @@ export class TokenSenseAi implements INodeType {
 				default: 1.0,
 				typeOptions: { minValue: 0, maxValue: 2, numberPrecision: 1 },
 				description: 'Controls randomness (0-2)',
-				displayOptions: { show: { operation: ['nativeGemini'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['nativeGemini'] } },
 			},
 			{
 				displayName: 'Max Output Tokens',
@@ -459,7 +500,7 @@ export class TokenSenseAi implements INodeType {
 				type: 'number',
 				default: 0,
 				description: 'Maximum output tokens. Leave at 0 for model default.',
-				displayOptions: { show: { operation: ['nativeGemini'] } },
+				displayOptions: { show: { resource: ['chat'], operation: ['nativeGemini'] } },
 			},
 		],
 	};
