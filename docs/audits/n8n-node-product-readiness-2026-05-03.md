@@ -501,7 +501,7 @@ Ordered sequence of work to reach "fully ready." Tagged by owner: **CC** = Claud
 
 ### Files reviewed
 
-**Repo (`/Users/carlo/Documents/GitHub/n8n-nodes-tokensense/`)**
+**Repo (`n8n-nodes-tokensense/`)**
 - `package.json` — version, deps, n8n declaration, engines
 - `README.md` — full
 - `CHANGELOG.md` — v0.1.1 entry
@@ -519,12 +519,12 @@ Ordered sequence of work to reach "fully ready." Tagged by owner: **CC** = Claud
 - `docs/plans/sprint-v0.1.1-pre-verification-2026-05-02.md`
 - `icons/tokensense.svg` (606 bytes)
 
-**SecondBrain (`/Users/carlo/Documents/SecondBrain/01 Projects/TokenSense/`)**
+**TokenSense vault (private)**
 - `n8n Community Node.md`
 - `n8n Verification Submission Pre-Flight.md`
 - `Open Questions.md`
 
-**Smoke evidence pack (`~/Documents/Claude/Projects/Aegis/n8n-smoke-2026-05-02/`)**
+**Smoke evidence pack (private — local fixtures from May 2 Docker smoke)**
 - `00-SMOKE-RESULT.md`
 - `02-n8n-boot-logs.txt`
 - `03-installed-package.json`
@@ -568,8 +568,8 @@ Recommended call: ship v0.1.2, set the success metric, rotate the publish token,
 
 **Related**
 
-- [`n8n Community Node.md`](../../../../SecondBrain/01%20Projects/TokenSense/n8n%20Community%20Node.md) — parent vault note
-- [`n8n Verification Submission Pre-Flight.md`](../../../../SecondBrain/01%20Projects/TokenSense/n8n%20Verification%20Submission%20Pre-Flight.md) — May 3 PM review
+- TokenSense vault: `n8n Community Node` (parent vault note), `n8n Verification Submission Pre-Flight` (May 3 PM review)
 - [`docs/plans/sprint-v0.1.1-pre-verification-2026-05-02.md`](../plans/sprint-v0.1.1-pre-verification-2026-05-02.md) — completed sprint
+- Dashboard launch-readiness companion pair: [`tokensense` repo PR #208](https://github.com/TheYote12/tokensense/pull/208)
 - Verified n8n submission rules: https://docs.n8n.io/integrations/creating-nodes/build/reference/verification-guidelines/
 - Submission portal: https://docs.n8n.io/integrations/creating-nodes/deploy/submit-community-nodes/

@@ -9,7 +9,7 @@ This doc walks the n8n node experience through each of TokenSense's three ICPs. 
 
 ICPs are equally weighted (per April 18 decision). No persona is primary. The walkthroughs are the same length and depth.
 
-The framing standard is the [industry-standard floor](../../../../Library/Application%20Support/Claude/local-agent-mode-sessions/4cbab4fc-df21-434d-8552-062ab8d2f669/637ac021-1e62-48fd-89a7-248fae7f2208/spaces/444bf6a9-a5f0-4a45-a977-8f4d7e4f493e/memory/feedback_industry_standard_floor.md) rule: every "match competitor" recommendation is paired with "exceed competitor."
+The framing standard is the **industry-standard-floor rule**: every "match competitor" recommendation is paired with "exceed competitor."
 
 ---
 
@@ -400,6 +400,5 @@ The fixes are small, surgical, mostly in README + one wrapper file + one field-t
 **Related**
 
 - [`n8n-node-product-readiness-2026-05-03.md`](./n8n-node-product-readiness-2026-05-03.md) — the underlying readiness audit
-- [`Positioning & ICP.md`](../../../../SecondBrain/01%20Projects/TokenSense/Positioning%20%26%20ICP.md) — locked positioning
-- [`ICP Readiness Audit Findings.md`](../../../../SecondBrain/01%20Projects/TokenSense/ICP%20Readiness%20Audit%20Findings.md) — April audit, 5/6 resolved
-- [`n8n Verification Submission Pre-Flight.md`](../../../../SecondBrain/01%20Projects/TokenSense/n8n%20Verification%20Submission%20Pre-Flight.md) — May 3 PM review
+- TokenSense vault: `Positioning & ICP` (locked positioning), `ICP Readiness Audit Findings` (April 2026 audit, 5/6 resolved), `n8n Verification Submission Pre-Flight` (May 3 PM review)
+- Dashboard launch-readiness companion pair: [`tokensense` repo PR #208](https://github.com/TheYote12/tokensense/pull/208)
