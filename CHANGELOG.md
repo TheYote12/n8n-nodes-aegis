@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.1.2 — 2026-05-06
+
+### Marketplace readiness (pre-Creator Portal submission)
+
+- **README:** Remove incorrect "TokenSense Embeddings" sub-node listing — embeddings is a Create Embedding operation on the general node, not a separate sub-node
+- **README:** Rewrite description for marketplace clarity — plain language, pricing transparency, AI Tool variant and provider comparison sections added
+- **Credentials:** `documentationUrl` now points to `https://tokensense.io/docs/integrations/n8n/setup` instead of GitHub repo
+- **No code changes** to node logic — all 62 tests still pass, zero runtime dependency changes
+
 ## 0.1.1 — 2026-05-02
 
 ### Fixed

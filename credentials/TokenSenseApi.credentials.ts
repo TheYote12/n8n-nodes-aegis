@@ -8,7 +8,7 @@ import type {
 export class TokenSenseApi implements ICredentialType {
 	name = 'tokenSenseApi';
 	displayName = 'TokenSense API';
-	documentationUrl = 'https://github.com/TheYote12/n8n-nodes-tokensense';
+	documentationUrl = 'https://tokensense.io/docs/integrations/n8n/setup';
 	icon = 'file:icons/tokensense.svg' as const;
 
 	properties: INodeProperties[] = [
