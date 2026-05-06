@@ -1,6 +1,12 @@
 # Changelog
 
-## v0.1.3 — 2026-05-XX
+## v0.1.4 — 2026-05-06
+
+### Docs
+
+- **README:** Updated model references to current generation (GPT-5.5, Claude Opus 4.7, Gemini 3 Flash, GPT Image 2)
+
+## v0.1.3 — 2026-05-06
 
 ### Model currency update
 
