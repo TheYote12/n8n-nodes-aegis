@@ -33,7 +33,7 @@ export class TokenSenseChatModel implements INodeType {
 				displayName: 'Model Name or ID',
 				name: 'model',
 				type: 'options',
-				default: 'gpt-4o',
+				default: 'gpt-4.1-mini',
 				required: true,
 				description:
 					'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
