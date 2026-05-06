@@ -1,18 +1,19 @@
 # n8n-nodes-tokensense
 
-Community node for [TokenSense](https://app.tokensense.io) — a unified AI gateway with cost tracking, multi-provider routing, and project management.
+n8n community node for [TokenSense](https://tokensense.io) — one API key for every AI provider, with automatic cost tracking per workflow.
 
 ## What is TokenSense?
 
-TokenSense is a universal AI gateway that sits between your automation tools and AI providers (OpenAI, Anthropic, Google, xAI, Mistral). It gives you a single API key, automatic cost tracking, budget enforcement, and intelligent routing — all without changing your workflow logic.
+TokenSense is an AI gateway for automation teams. Connect OpenAI, Anthropic, Google Gemini, xAI, and Mistral through a single endpoint. Every request is logged with cost, tokens, and latency — broken down by workflow, step, and execution. Set budget caps, and TokenSense enforces them before you overspend.
+
+Free tier available. Paid plans currently start from $29/month. TokenSense doesn't mark up provider rates.
 
 ## Nodes included
 
 | Node | Type | Use case |
 |------|------|----------|
-| **TokenSense Chat Model** | AI Agent sub-node | Attach to any n8n AI Agent as the language model |
-| **TokenSense Embeddings** | RAG sub-node | Generate text embeddings for vector store workflows |
-| **TokenSense AI** | General purpose | Chat completions, image generation, TTS, transcription, and more |
+| **TokenSense Chat Model** | AI Agent sub-node | Drop into any AI Agent as the language model — all providers through one credential |
+| **TokenSense AI** | General purpose | Chat completions, embeddings, image generation, TTS, transcription, native Anthropic & Gemini |
 
 ## Installation
 
@@ -39,10 +40,6 @@ TokenSense is a universal AI gateway that sits between your automation tools and
 
 Every request is automatically logged in your TokenSense Dashboard with cost, latency, and token counts. Use the **Project** and **Workflow Tag** fields to organize requests by team or use case.
 
-## Usage: RAG Pipeline with TokenSense Embeddings
-
-Add the **TokenSense Embeddings** sub-node to any vector store node (Pinecone, Qdrant, Supabase, etc.) that accepts an Embeddings input. Select your embedding model and optionally set output dimensions for `text-embedding-3-*` models.
-
 ## Usage: General TokenSense AI Node
 
 The **TokenSense AI** node is a standalone node for calling TokenSense directly from any workflow. Supported operations:
@@ -58,6 +55,14 @@ The **TokenSense AI** node is a standalone node for calling TokenSense directly 
 | **Native Gemini** | Call the Google Gemini API directly |
 | **List Models** | Fetch all models available in your TokenSense account |
 
+## Usage: AI Agent Tool
+
+The TokenSense AI node has `usableAsTool: true`, so n8n automatically makes it available as a **Tool** inside AI Agent workflows. Add it to the Tools slot to let your agent call TokenSense operations (chat, image generation, embeddings) as tools during execution.
+
+## Compare providers without rewiring
+
+Testing GPT-4o vs Claude Sonnet vs Gemini Pro? Change the model dropdown — the credential, endpoint, and workflow stay the same. Cost and latency for each model appear side-by-side in your TokenSense Dashboard.
+
 ## Features
 
 - **One credential for all AI providers** — OpenAI, Anthropic, Google, xAI, Mistral
@@ -70,7 +75,9 @@ The **TokenSense AI** node is a standalone node for calling TokenSense directly 
 
 ## Links
 
-- [TokenSense Dashboard](https://app.tokensense.io)
+- [TokenSense](https://tokensense.io) — landing page and docs
+- [TokenSense Dashboard](https://app.tokensense.io) — sign up and manage your account
+- [n8n Setup Guide](https://tokensense.io/docs/integrations/n8n/setup) — step-by-step installation and configuration
 - [GitHub](https://github.com/TheYote12/n8n-nodes-tokensense)
 - [Report issues](https://github.com/TheYote12/n8n-nodes-tokensense/issues)
 
